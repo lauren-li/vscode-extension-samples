@@ -5,7 +5,7 @@
 
 const gulp = require('gulp');
 const path = require('path');
-
+var webpack = require('webpack-stream');
 const ts = require('gulp-typescript');
 const typescript = require('typescript');
 const sourcemaps = require('gulp-sourcemaps');
@@ -19,13 +19,13 @@ const tsProject = ts.createProject('./tsconfig.json', { typescript });
 
 const inlineMap = true;
 const inlineSource = false;
-const outDest = 'out';
+const outDest = 'dist';
 
 // If all VS Code langaues are support you can use nls.coreLanguages
 const languages = [{ folderName: 'jpn', id: 'ja' }];
 
 const cleanTask = function() {
-	return del(['out/**', 'package.nls.*.json', 'i18n-sample*.vsix']);
+	return del(['dist/**', 'package.nls.*.json', 'i18n-sample*.vsix']);
 }
 
 const internalCompileTask = function() {
@@ -41,20 +41,26 @@ const addI18nTask = function() {
 		.pipe(nls.createAdditionalLanguageFiles(languages, 'i18n'))
 		.pipe(gulp.dest('.'));
 };
+const webpackConfigTask = function() {
+	return gulp.src('src/extension.ts')
+		.pipe(webpack(require('./webpack.config.js')))
+		.pipe(gulp.dest('.'));
+};
 
-const buildTask = gulp.series(cleanTask, internalNlsCompileTask, addI18nTask);
+const buildTask = gulp.series(cleanTask, internalNlsCompileTask, addI18nTask, webpackConfigTask);
 
 const doCompile = function (buildNls) {
 	var r = tsProject.src()
 		.pipe(sourcemaps.init())
 		.pipe(tsProject()).js
 		.pipe(buildNls ? nls.rewriteLocalizeCalls() : es.through())
-		.pipe(buildNls ? nls.createAdditionalLanguageFiles(languages, 'i18n', 'out') : es.through());
+		.pipe(webpack(require('./webpack.config.js')))
+		.pipe(buildNls ? nls.createAdditionalLanguageFiles(languages, 'i18n', 'dist') : es.through());
 
 	if (inlineMap && inlineSource) {
 		r = r.pipe(sourcemaps.write());
 	} else {
-		r = r.pipe(sourcemaps.write("../out", {
+		r = r.pipe(sourcemaps.write("../dist", {
 			// no inlined source
 			includeContent: inlineSource,
 			// Return relative source map root directories per file.

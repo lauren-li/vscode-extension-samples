@@ -1,0 +1,9 @@
+{
+	"messages": [
+		"Bye"
+	],
+	"keys": [
+		"sayBye.text"
+	],
+	"filePath": "../src/command/sayBye"
+}
