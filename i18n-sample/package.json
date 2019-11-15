@@ -16,7 +16,7 @@
 		"onCommand:extension.sayHello",
 		"onCommand:extension.sayBye"
 	],
-	"main": "./out/extension.js",
+	"main": "./dist/extension.js",
 	"contributes": {
 		"commands": [
 			{
@@ -31,7 +31,7 @@
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
-		"watch": "tsc -b -w",
+		"watch": "gulp build",
 		"compile": "gulp build",
 		"clean": "gulp clean",
 		"package": "vsce package"

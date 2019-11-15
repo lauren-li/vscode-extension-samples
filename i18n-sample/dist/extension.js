@@ -592,7 +592,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
  * ------------------------------------------------------------------------------------------ */
 const vscode = __webpack_require__(/*! vscode */ "vscode");
 const nls = __webpack_require__(/*! vscode-nls */ "./node_modules/vscode-nls/lib/main.js");
-const localize = nls.loadMessageBundle(__webpack_require__(/*! path */ "path").join(__dirname, 'command/sayBye.ts'));
+const localize = nls.loadMessageBundle(__webpack_require__(/*! path */ "path").join(__dirname, 'src/command/sayBye.ts'));
 function sayByeCommand() {
     const message = localize(0, null);
     vscode.window.showInformationMessage(message);
@@ -619,7 +619,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
  * ------------------------------------------------------------------------------------------ */
 const nls = __webpack_require__(/*! vscode-nls */ "./node_modules/vscode-nls/lib/main.js");
 // The example uses the file message format.
-const localize = nls.config({ messageFormat: nls.MessageFormat.file })(__webpack_require__(/*! path */ "path").join(__dirname, 'extension.ts'));
+const localize = nls.config({ messageFormat: nls.MessageFormat.file })(__webpack_require__(/*! path */ "path").join(__dirname, 'src/extension.ts'));
 const vscode = __webpack_require__(/*! vscode */ "vscode");
 const sayBye_1 = __webpack_require__(/*! ./command/sayBye */ "./src/command/sayBye.ts");
 function activate(context) {

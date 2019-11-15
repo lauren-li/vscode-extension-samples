@@ -25,20 +25,22 @@ const config = {
         vscode: "commonjs vscode" // the vscode-module is created on-the-fly and must be excluded. Add other modules that cannot be webpack'ed, 📖 -> https://webpack.js.org/configuration/externals/
     },
     resolve: { // support reading TypeScript and JavaScript files, 📖 -> https://github.com/TypeStrong/ts-loader
-        extensions: ['.ts', '.js']
+        extensions: ['.ts', '.js', '.json']
     },
     module: {
         rules: [{
             test: /\.ts$/,
             exclude: /node_modules/,
-            use: [{
+            use: [
+				{
                 // vscode-nls-dev loader:
                 // * rewrite nls-calls
                 loader: 'vscode-nls-dev/lib/webpack-loader',
                 options: {
                     base: path.join(__dirname, 'src')
                 }
-            }, {
+			}, 
+			{
                 // configure TypeScript loader:
                 // * enable sources maps for end-to-end source maps
                 loader: 'ts-loader',
