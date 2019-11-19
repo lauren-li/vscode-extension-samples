@@ -30,10 +30,10 @@
 		]
 	},
 	"scripts": {
-		"vscode:prepublish": "npm run compiledev",
+		"vscode:prepublish": "npm run build",
 		"watch": "webpack --mode production --vscode-nls --watch --info-verbosity verbose",
 		"compile": "gulp build",
-		"compiledev": "gulp build && webpack --mode production --vscode-nls",
+		"build": "gulp build && webpack --mode production --vscode-nls",
 		"clean": "gulp clean",
 		"package": "vsce package"
 	},

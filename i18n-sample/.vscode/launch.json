@@ -3,15 +3,19 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
-			"name": "Launch Extension",
+			"name": "Launch Wazi Extension",
 			"type": "extensionHost",
 			"request": "launch",
 			"runtimeExecutable": "${execPath}",
-			"args": ["--extensionDevelopmentPath=${workspaceRoot}" ],
-			"stopOnEntry": false,
-			"sourceMaps": true,
-			"outFiles": [ "${workspaceRoot}/out/src/**/*.js" ],
-			"preLaunchTask": "npm: watch"
-		}
+			"args": [
+			  "--extensionDevelopmentPath=${workspaceFolder}",
+			  "--verbose"
+			],
+			"outFiles": [
+			  "${workspaceFolder}/dist/**/*.js"
+			],
+			"preLaunchTask": "npm: build",
+			"smartStep": true
+		  },
 	]
 }

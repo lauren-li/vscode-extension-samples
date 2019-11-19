@@ -1,9 +1,0 @@
-{
-	"messages": [
-		"Bye"
-	],
-	"keys": [
-		"sayBye.text"
-	],
-	"filePath": "../Users/Lauren.Li@ibm.com/Desktop/Repositories/microsoft-github/vscode-extension-samples/i18n-sample/src/command/sayBye"
-}

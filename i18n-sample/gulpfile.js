@@ -45,7 +45,7 @@ const vscePublishTask = function() {
 const vscePackageTask = function() {
 	return vsce.createVSIX();
 };
-const localizationTask = gulp.series(generateSrcLocBundle, addI18nTask);
+const localizationTask = gulp.series(cleanTask, generateSrcLocBundle, addI18nTask);
 
 const buildTask = gulp.series(localizationTask);
 
