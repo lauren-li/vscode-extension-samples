@@ -2,9 +2,19 @@
 	"compilerOptions": {
 		"module": "commonjs",
 		"target": "es6",
-		"outDir": "out",
+		// "outDir": "out",
+		"lib": [
+			"es6", "dom"
+		],
 		"sourceMap": true,
-		"strict": true
+		"rootDir": ".",
+		"removeComments": true,
+		"noImplicitUseStrict": true,
+		"noUnusedLocals": true
 	},
-	"exclude": ["node_modules", ".vscode-test"]
+	"include": [
+		"src/**/*.ts",
+		"./node_modules/vscode/vscode.d.ts",
+		"./node_modules/vscode/lib/*"
+	]
 }

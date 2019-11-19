@@ -4,25 +4,14 @@
  *--------------------------------------------------------------------------------------------*/
 
 const gulp = require('gulp');
-const path = require('path');
-const WebpackStream = require('webpack-stream');
-const webpack = require('webpack');
-const webpackConfig = require('./webpack.config.js');
 const ts = require('gulp-typescript');
 const typescript = require('typescript');
 const sourcemaps = require('gulp-sourcemaps');
 const del = require('del');
-const runSequence = require('run-sequence');
-const es = require('event-stream');
 const vsce = require('vsce');
 const nls = require('vscode-nls-dev');
-
+const filter = require('gulp-filter');
 const tsProject = ts.createProject('./tsconfig.json', { typescript });
-
-const inlineMap = true;
-const inlineSource = false;
-const outDest = 'dist';
-
 // If all VS Code langaues are support you can use nls.coreLanguages
 const languages = [{ folderName: 'jpn', id: 'ja' }];
 
@@ -30,56 +19,24 @@ const cleanTask = function() {
 	return del(['dist/**', 'package.nls.*.json', 'i18n-sample*.vsix']);
 }
 
-const internalCompileTask = function() {
-	return doCompile(false);
-};
-
-const internalNlsCompileTask = function() {
-	return doCompile(true);
-};
-
 const addI18nTask = function() {
 	return gulp.src(['package.nls.json'])
 		.pipe(nls.createAdditionalLanguageFiles(languages, 'i18n'))
 		.pipe(gulp.dest('.'));
 };
 
-const addI18nTask2 = function() {
-	return tsProject.src()
-		.pipe(nls.rewriteLocalizeCalls())
-		.pipe(nls.createAdditionalLanguageFiles(languages, 'i18n'))
-		.pipe(gulp.dest('./dist'));
+const generateSrcLocBundle = () => {
+    // Transpile the TS to JS, and let vscode-nls-dev scan the files for calls to localize.
+    return tsProject.src()
+        .pipe(sourcemaps.init())
+        .pipe(tsProject()).js
+        .pipe(nls.createMetaDataFiles())
+        .pipe(nls.createAdditionalLanguageFiles(languages, "i18n"))
+        .pipe(nls.bundleMetaDataFiles('vscode-i18n-sample.i18n-sample', 'dist'))
+        .pipe(nls.bundleLanguageFiles())
+        .pipe(filter(['**/nls.bundle.*.json', '**/nls.metadata.header.json', '**/nls.metadata.json']))
+        .pipe(gulp.dest('dist'));
 };
-
-const webpackConfigTask = function() {
-	return tsProject.src()
-		.pipe(WebpackStream(webpackConfig), webpack)
-		.pipe(gulp.dest('./dist'));
-};
-
-const buildTask = gulp.series(cleanTask, internalNlsCompileTask);
-
-const doCompile = function (buildNls) {
-	var r = tsProject.src()
-		// .pipe(sourcemaps.init())
-		// .pipe(tsProject()).js
-		.pipe(WebpackStream(webpackConfig), webpack)
-		.pipe(buildNls ? nls.rewriteLocalizeCalls() : es.through())
-		.pipe(buildNls ? nls.createAdditionalLanguageFiles(languages, 'i18n', 'out') : es.through());
-
-	if (inlineMap && inlineSource) {
-		r = r.pipe(sourcemaps.write());
-	} else {
-		r = r.pipe(sourcemaps.write("../dist", {
-			// no inlined source
-			includeContent: inlineSource,
-			// Return relative source map root directories per file.
-			sourceRoot: "../src"
-		}));
-	}
-
-	return r.pipe(gulp.dest(outDest));
-}
 
 const vscePublishTask = function() {
 	return vsce.publish();
@@ -88,14 +45,17 @@ const vscePublishTask = function() {
 const vscePackageTask = function() {
 	return vsce.createVSIX();
 };
+const localizationTask = gulp.series(generateSrcLocBundle, addI18nTask);
+
+const buildTask = gulp.series(localizationTask);
 
 gulp.task('default', buildTask);
 
 gulp.task('clean', cleanTask);
 
-gulp.task('compile', gulp.series(cleanTask, internalCompileTask));
-
 gulp.task('build', buildTask);
+
+gulp.task('localization', localizationTask);
 
 gulp.task('publish', gulp.series(buildTask, vscePublishTask));
 

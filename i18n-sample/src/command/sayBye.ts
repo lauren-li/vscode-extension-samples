@@ -4,9 +4,8 @@
  * ------------------------------------------------------------------------------------------ */
 import * as vscode from 'vscode';
 import * as nls from 'vscode-nls';
-
-const localize = nls.loadMessageBundle();
-
+nls.config({ messageFormat: nls.MessageFormat.bundle, bundleFormat: nls.BundleFormat.standalone })();
+const localize: nls.LocalizeFunc = nls.loadMessageBundle();
 export function sayByeCommand() {
 	const message = localize('sayBye.text', 'Bye');
 	vscode.window.showInformationMessage(message);

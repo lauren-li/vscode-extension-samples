@@ -3,12 +3,12 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 import * as nls from 'vscode-nls';
-
-// The example uses the file message format.
-const localize = nls.config({ messageFormat: nls.MessageFormat.file })();
-
 import * as vscode from 'vscode';
 import { sayByeCommand } from './command/sayBye';
+
+nls.config({ messageFormat: nls.MessageFormat.bundle, bundleFormat: nls.BundleFormat.languagePack })();
+
+const localize: nls.LocalizeFunc = nls.loadMessageBundle();
 
 export function activate(context: vscode.ExtensionContext) {
 	const helloCmd = vscode.commands.registerCommand('extension.sayHello', () => {
