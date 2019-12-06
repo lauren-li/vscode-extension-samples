@@ -13,7 +13,10 @@ const nls = require('vscode-nls-dev');
 const filter = require('gulp-filter');
 const tsProject = ts.createProject('./tsconfig.json', { typescript });
 // If all VS Code langaues are support you can use nls.coreLanguages
-const languages = [{ folderName: 'jpn', id: 'ja' }];
+const languages = [
+	{ folderName: 'jpn', id: 'ja' },
+	{ folderName: 'fra', id: 'fr' }
+];
 
 const cleanTask = function() {
 	return del(['dist/**', 'package.nls.*.json', 'i18n-sample*.vsix']);

@@ -6,7 +6,7 @@ import * as nls from 'vscode-nls';
 import * as vscode from 'vscode';
 import { sayByeCommand } from './command/sayBye';
 
-nls.config({ messageFormat: nls.MessageFormat.bundle, bundleFormat: nls.BundleFormat.languagePack })();
+nls.config({ messageFormat: nls.MessageFormat.bundle, bundleFormat: nls.BundleFormat.standalone })();
 
 const localize: nls.LocalizeFunc = nls.loadMessageBundle();
 
